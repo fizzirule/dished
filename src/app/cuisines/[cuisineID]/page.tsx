@@ -1,19 +1,26 @@
+import { recipes } from "@/lib/recipes"
+import RecipeCard from "@/components/RecipeCard";
+
 type Props = {
-    params: {
-        cuisineID: string;
-    };
+    params: Promise<{
+        cuisineId: string;
+    }>;
 };
 
-export default function CuisinePage({ params }: Props) {
+export default async function CuisinePage({ params }: Props) {
+    const { cuisineId } = await params;
+
+    const filteredrecipes = recipes.filter( (recipe) => recipe.cuisine == cuisineId);
     return (
         <main className="min-h-screen p-8">
             <h1 className="text-3xl font-bold capitalize">
-                {params.cuisineID} Cuisine
+                {cuisineId} Recipes
             </h1>
 
-            <p className="mt-4 text-gray-600">
-                Recipes coming soon 🍽️
-            </p>
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {filteredrecipes.map((recipe) => (<RecipeCard key={recipe.id} {...recipe} />
+            ))}
+            </div>
         </main>
     );
 }
